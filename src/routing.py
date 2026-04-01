@@ -20,3 +20,4 @@ def compute_routes(graph, traffic, config):
             routes[bs] = None
 
     return routes
+
