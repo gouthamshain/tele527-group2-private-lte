@@ -5,11 +5,9 @@ network:
     - id: BS3
     - id: BS4
     - id: BS5
-
   core_nodes:
     - id: CORE1
     - id: CORE2
-
   links:
     - from: BS1
       to: CORE1
@@ -20,17 +18,17 @@ network:
       capacity_mbps: 100
       delay_ms: 6
     - from: BS3
-      to: CORE2
+      to: CORE1
       capacity_mbps: 100
-      delay_ms: 7
+      delay_ms: 4
     - from: BS4
       to: CORE2
       capacity_mbps: 100
-      delay_ms: 5
+      delay_ms: 7
     - from: BS5
-      to: CORE1
+      to: CORE2
       capacity_mbps: 100
-      delay_ms: 8
+      delay_ms: 5
     - from: CORE1
       to: CORE2
       capacity_mbps: 500
@@ -41,24 +39,41 @@ traffic_classes:
     offered_load: 20
     priority: 1
   - name: voice
-    offered_load: 40
+    offered_load: 60
     priority: 2
   - name: video
-    offered_load: 60
+    offered_load: 80
     priority: 3
   - name: bulk_data
-    offered_load: 80
+    offered_load: 40
     priority: 4
+
+load_multiplier: 1.0
 
 wireless:
   frequency_mhz: 1800
   base_height_m: 30
   mobile_height_m: 1.5
-  sample_distances_km: [0.5, 1, 2, 3, 5]
-
-forecasting:
-  annual_growth_rate: 0.15
-  years: 3
+  sample_distances_km:
+    - 0.1
+    - 0.2
+    - 0.5
+    - 1.0
+    - 1.5
+    - 2.0
+    - 2.5
+    - 3.0
+    - 3.5
+    - 4.0
+    - 5.0
+  reuse_factor: 3
+  sector_count: 3
+  tx_power_dbm: 46
+  antenna_gain_dbi: 17
+  cable_loss_db: 2
+  rx_sensitivity_dbm: -95
+  fade_margin_db: 10
+  rx_antenna_gain_dbi: 0
 
 failure:
   enabled: false
@@ -66,8 +81,102 @@ failure:
     from: CORE1
     to: CORE2
 
+forecasting:
+  annual_growth_rate: 0.15
+  years: 3
+
 kpi_targets:
   max_delay_ms_critical: 80
   max_packet_loss_percent: 2.5
   min_throughput_mbps: 180
   min_site_availability_percent: 80
+  max_voice_blocking_percent: 2.0
+
+teletraffic:
+  voice_erlangs: 8.0
+  voice_channels: 15
+  target_blocking_percent: 2.0
+
+backhaul:
+  microwave_links:
+    - id: BS1-CORE1
+      from: BS1
+      to: CORE1
+      frequency_ghz: 7.5
+      distance_km: 2.0
+      tx_power_dbm: 30
+      tx_antenna_gain_dbi: 34
+      rx_antenna_gain_dbi: 34
+      cable_loss_db: 1.0
+      rx_sensitivity_dbm: -83
+      fade_margin_db: 25
+    - id: BS2-CORE1
+      from: BS2
+      to: CORE1
+      frequency_ghz: 7.5
+      distance_km: 1.5
+      tx_power_dbm: 30
+      tx_antenna_gain_dbi: 34
+      rx_antenna_gain_dbi: 34
+      cable_loss_db: 1.0
+      rx_sensitivity_dbm: -83
+      fade_margin_db: 25
+    - id: BS3-CORE1
+      from: BS3
+      to: CORE1
+      frequency_ghz: 7.5
+      distance_km: 3.0
+      tx_power_dbm: 30
+      tx_antenna_gain_dbi: 34
+      rx_antenna_gain_dbi: 34
+      cable_loss_db: 1.0
+      rx_sensitivity_dbm: -83
+      fade_margin_db: 25
+    - id: BS4-CORE2
+      from: BS4
+      to: CORE2
+      frequency_ghz: 7.5
+      distance_km: 2.5
+      tx_power_dbm: 30
+      tx_antenna_gain_dbi: 34
+      rx_antenna_gain_dbi: 34
+      cable_loss_db: 1.0
+      rx_sensitivity_dbm: -83
+      fade_margin_db: 25
+    - id: BS5-CORE2
+      from: BS5
+      to: CORE2
+      frequency_ghz: 7.5
+      distance_km: 1.8
+      tx_power_dbm: 30
+      tx_antenna_gain_dbi: 34
+      rx_antenna_gain_dbi: 34
+      cable_loss_db: 1.0
+      rx_sensitivity_dbm: -83
+      fade_margin_db: 25
+    - id: CORE1-CORE2
+      from: CORE1
+      to: CORE2
+      frequency_ghz: 11.0
+      distance_km: 5.0
+      tx_power_dbm: 33
+      tx_antenna_gain_dbi: 38
+      rx_antenna_gain_dbi: 38
+      cable_loss_db: 1.0
+      rx_sensitivity_dbm: -80
+      fade_margin_db: 30
+
+signaling:
+  packet_size_bytes: 1500
+  proc_delay_ms: 1.0
+  burst_multipliers:
+    - 0.2
+    - 0.4
+    - 0.6
+    - 0.8
+    - 1.0
+    - 1.2
+    - 1.4
+    - 1.6
+    - 1.8
+    - 2.0
